@@ -30,8 +30,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     private String base_url = "https://maps.googleapis.com/maps/";
-    private String base_url_post = "http://192.168.10.35/";
-    Button hit_server,create_file;
+    private String base_url_post_get = "http://192.168.10.33/";
+    Button hit_server,create_file,get,post,get_url_params;
     Gson gson;
     MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
 
@@ -42,7 +42,85 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         hit_server =(Button) findViewById(R.id.hit_server);
         create_file = (Button) findViewById(R.id.create_file);
+        get = (Button) findViewById(R.id.get);
+        post = (Button) findViewById(R.id.post);
+        get_url_params = (Button) findViewById(R.id.get_url_params);
         gson = new GsonBuilder().create();
+
+        get.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(base_url_post_get)
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .build();
+
+                Services service = retrofit.create(Services.class);
+                Call<Foo> call = service.getData();
+
+                call.enqueue(new Callback<Foo>() {
+                    @Override
+                    public void onResponse(Call<Foo> call, Response<Foo> response) {
+                        Foo body = response.body();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Foo> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
+
+        get_url_params.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(base_url_post_get)
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .build();
+
+                Services service = retrofit.create(Services.class);
+                Call<UrlParams> call = service.getDataViaUrlParams();
+
+                call.enqueue(new Callback<UrlParams>() {
+                    @Override
+                    public void onResponse(Call<UrlParams> call, Response<UrlParams> response) {
+                        UrlParams body = response.body();
+                    }
+
+                    @Override
+                    public void onFailure(Call<UrlParams> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
+
+        post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(base_url_post_get)
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .build();
+
+                Services service = retrofit.create(Services.class);
+                Call<Info> call = service.getLandingPageReport("Shahbaz","m.azam.shahbaz@gmail.com");
+
+                call.enqueue(new Callback<Info>() {
+                    @Override
+                    public void onResponse(Call<Info> call, Response<Info> response) {
+                        Info body = response.body();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Info> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
 
         create_file.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
     private void uploadFile(File file) {
         // create upload service client
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(base_url_post)
+                .baseUrl(base_url_post_get)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 

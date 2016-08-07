@@ -6,6 +6,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
@@ -19,15 +21,17 @@ import retrofit2.http.Path;
 public interface Services {
     @GET("api/timezone/json?location=38.908133,-77.047119&timestamp=1458000000") Call<Foo> listRepos();
 
-//    @Multipart
-//    @POST("post") Call<ResponseBody> upload(@Multipart desc, @Part("myFile") RequestBody file);
+    @GET("get.php") Call<Foo> getData();
+
+    @GET("get_url_params.php?param1=p1&param2=p2") Call<UrlParams> getDataViaUrlParams();
+
+    @FormUrlEncoded
+    @POST("post.php")
+    Call<Info> getLandingPageReport(@Field("name") String name, @Field("email") String email);
 
     @Multipart
     @POST("in.php")
     Call<ResponseBody> upload(@Part("description") RequestBody description, @Part MultipartBody.Part file);
 
 
-//    @Multipart
-//    @POST("/api/Accounts/editaccount")
-//    Call<User> editUser (@Header("Authorization") String authorization, @Part("file\"; filename=\"pp.png\" ") RequestBody file , @Part("FirstName") RequestBody fname, @Part("Id") RequestBody id);
 }
